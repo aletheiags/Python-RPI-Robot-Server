@@ -1,12 +1,12 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/> <!--320-->
 
   <title>Controller</title>
 </head>
 
 <style type="text/css">
-
   body{
     margin:0;
     padding:0;
@@ -23,6 +23,10 @@
     float: right;
     margin-right:20px;
   }
+  .arrow{
+    -webkit-touch-callout: none;                /* prevent callout to copy image, etc when tap to hold */
+    -webkit-user-select: none;                  /* prevent copy paste, to allow, change 'none' to 'text' */
+  }
 
 </style>
 
@@ -37,16 +41,36 @@
   </div>
 
 <script>
+var ajax = function(u,f){
+    console.log('an ajax request started');
+    var x=window.XMLHttpRequest?new XMLHttpRequest():new ActiveXObject('Microsoft.XMLHTTP');
+    x.onreadystatechange=function(){
+      if(x.readyState==4&&x.status==200){
+        f(x.responseText)
+      }
+    };
+    x.open('GET',u,true);
+    x.send(null)
+  }
+
 var Controls = {
   pressed :function(){
     console.log(this.id+' was pressed')
     console.log([this.direction,this.side])
     this.src = 'arrow_'+this.direction+'_pressed.png';
+    ajax('/pressed?side='+this.side+'&dir='+this.direction, function(data){
+      //could do something with this in the future
+      console.log(data)
+    });
   },
   released : function(){
     console.log(this.id+' was relased')
     console.log([this.direction,this.side])
     this.src = 'arrow_'+this.direction+'.png';
+    ajax('/released?side='+this.side+'&dir='+this.direction, function(data){
+      //could do something with this in the future
+      console.log(data)
+    });
   }
 }
 
@@ -63,14 +87,34 @@ var newImage = function(dir,side){
   img.addEventListener('load',function(){
     //There should be a named item for each
     document.getElementById(side+dir).appendChild(this)
+    onLongPress(this);
   });
   img.direction = dir
   img.side = side
   img.id = side+'Arrow'+dir
-  img.addEventListener('mousedown',Controls.pressed.bind(img))
-  img.addEventListener('mouseup',Controls.released.bind(img))
+  img.addEventListener('touchstart',Controls.pressed.bind(img))
+  img.addEventListener('touchend',Controls.released.bind(img))
   return img
 }
+
+function onLongPress(node) {
+  node.ontouchstart = nullEvent;
+  node.ontouchend = nullEvent;
+  node.ontouchcancel = nullEvent;
+  node.ontouchmove = nullEvent;
+}
+
+function nullEvent(event) {
+  var e = event || window.event;
+  e.preventDefault && e.preventDefault();
+  e.stopPropagation && e.stopPropagation();
+  e.cancelBubble = true;
+  e.returnValue = false;
+  return false;
+}
+
+
+
 document.addEventListener( "DOMContentLoaded", loadController, false )
 </script>
 </body>

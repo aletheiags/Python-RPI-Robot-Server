@@ -42,7 +42,7 @@ def released():
     #       rightMotor.stop()
     #   else:
     #       rightMotor.stop()
-    return 'pressed'
+    return 'released'
 
 
 @app.route('/')
@@ -52,4 +52,5 @@ def index():
 if __name__ == '__main__':
     #leftMotor.stop()
     #rightMotor.stop()
-	app.run()
+	#app.run()
+    app.run(host='0.0.0.0')
