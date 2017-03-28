@@ -1,0 +1,77 @@
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>Controller</title>
+</head>
+
+<style type="text/css">
+
+  body{
+    margin:0;
+    padding:0;
+  }
+  .row{
+    height:120px;
+    clear:both;
+  }
+  .left{
+    float:left;
+    margin-left:20px;
+  }
+  .right{
+    float: right;
+    margin-right:20px;
+  }
+
+</style>
+
+<body>
+  <div class='row' id='topRow'>
+    <div class='arrow left up' id = 'leftup'></div>
+    <div class='arrow right up' id = 'rightup'></div>
+  <div>
+  <div class='row' id='bottomRow'>
+    <div class='arrow left down' id = 'leftdown'></div>
+    <div class = 'arrow right down' id = 'rightdown'></div>
+  </div>
+
+<script>
+var Controls = {
+  pressed :function(){
+    console.log(this.id+' was pressed')
+    console.log([this.direction,this.side])
+    this.src = 'arrow_'+this.direction+'_pressed.png';
+  },
+  released : function(){
+    console.log(this.id+' was relased')
+    console.log([this.direction,this.side])
+    this.src = 'arrow_'+this.direction+'.png';
+  }
+}
+
+var loadController = function(){
+  newImage('up','left');
+  newImage('down','left');
+  newImage('up','right');
+  newImage('down','right');
+}
+
+var newImage = function(dir,side){
+  var img = new Image();
+  img.src = 'arrow_'+dir+'.png';
+  img.addEventListener('load',function(){
+    //There should be a named item for each
+    document.getElementById(side+dir).appendChild(this)
+  });
+  img.direction = dir
+  img.side = side
+  img.id = side+'Arrow'+dir
+  img.addEventListener('mousedown',Controls.pressed.bind(img))
+  img.addEventListener('mouseup',Controls.released.bind(img))
+  return img
+}
+document.addEventListener( "DOMContentLoaded", loadController, false )
+</script>
+</body>
+<html>
