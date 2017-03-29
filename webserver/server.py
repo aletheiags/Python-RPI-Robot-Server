@@ -1,8 +1,13 @@
 from flask import Flask,send_file, make_response, request,jsonify
+from gpiozero import Motor
+
+#Need a config file for this part
+motors = {
+    'left':Motor(forward=4, backward=14),
+    'right':Motor(forward=27, backward=22)
+}
 
 app = Flask(__name__, static_url_path='')
-
-
 
 @app.route('/pressed')
 def pressed():
@@ -11,18 +16,12 @@ def pressed():
     print(direct)
     print(side)
 
-    #here is where I send info to the GPIO pins
-    #if side == 'left':
-    #   if dir == 'up':
-    #       leftMotor.forward()
-    #   else:
-    #       leftMotor.reverse()
-    #elif side == 'right':
-    #   if dir == 'up':
-    #       rightMotor.forward()
-    #   else:
-    #       rightMotor.reverse()
-    return 'pressed'
+    if direct == 'up':
+        motors[side].forward()
+    elif direct == 'down':
+        motors[side].backward()
+
+
 
 @app.route('/released')
 def released():
@@ -31,17 +30,7 @@ def released():
     print(direct)
     print(side)
 
-    #here is where I send info to the GPIO pins
-    #if side == 'left':
-    #   if dir == 'up':
-    #       leftMotor.stop()
-    #   else:
-    #       leftMotor.stop()
-    #elif side == 'right':
-    #   if dir == 'up':
-    #       rightMotor.stop()
-    #   else:
-    #       rightMotor.stop()
+    motors[side].stop()
     return 'released'
 
 
