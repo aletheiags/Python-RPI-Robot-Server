@@ -3,8 +3,8 @@ from gpiozero import Motor
 
 #Need a config file for this part
 motors = {
-    'left':Motor(forward=4, backward=14),
-    'right':Motor(forward=27, backward=22)
+    'left':Motor(forward=17, backward=27),
+    'right':Motor(forward=23, backward=22)
 }
 
 app = Flask(__name__, static_url_path='')
